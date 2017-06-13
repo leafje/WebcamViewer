@@ -1,0 +1,1 @@
+﻿List of hresult values https://msdn.microsoft.com/en-us/library/windows/desktop/dd375623(v=vs.85).aspx
