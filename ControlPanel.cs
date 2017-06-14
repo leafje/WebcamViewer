@@ -18,6 +18,11 @@ namespace WebcamViewer
         public ControlPanel()
         {
             InitializeComponent();
+            // Set the initial value to something unlikely, so that assigning the 
+            // value to 0 still triggers the ValueChanged event.
+            this.trackBarValue.Minimum = -10000;
+            this.trackBarValue.Maximum = -10000;
+            this.trackBarValue.Value = -10000;
         }
 
         public CameraControlProperty PropertyType

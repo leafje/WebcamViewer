@@ -10,6 +10,7 @@ namespace WebcamViewer
     public partial class TestForm : Form
     {
         private Camera camera = null;
+        private ControlPanelForm controlPanel = null;
 
         public TestForm()
         {
@@ -69,17 +70,17 @@ namespace WebcamViewer
             this.Close();
         }
 
-        private void TestForm_ResizeBegin(object sender, EventArgs e)
-        {
-            if (this.WindowState == FormWindowState.Maximized)
-            {
-                this.FormBorderStyle = FormBorderStyle.None;
-            }
-            else if (this.WindowState == FormWindowState.Normal)
-            {
-                this.FormBorderStyle = FormBorderStyle.Sizable;
-            }
-        }
+        //private void TestForm_ResizeBegin(object sender, EventArgs e)
+        //{
+        //    if (this.WindowState == FormWindowState.Maximized)
+        //    {
+        //        this.FormBorderStyle = FormBorderStyle.None;
+        //    }
+        //    else if (this.WindowState == FormWindowState.Normal)
+        //    {
+        //        this.FormBorderStyle = FormBorderStyle.Sizable;
+        //    }
+        //}
 
         private void TestForm_Resize(object sender, EventArgs e)
         {
@@ -100,73 +101,86 @@ namespace WebcamViewer
 
         private void buttonControlPanel_Click(object sender, EventArgs e)
         {
-            Panel controlPanelHolder = new Panel();
-            controlPanelHolder.AutoSize = true;
-            int yCoord = 0;
-
-            List<CameraProperty> properties = this.camera.GetCameraInfo();
-            foreach (CameraProperty prop in properties)
+            lock (this.camera)
             {
-                // Skip properties that aren't user controllable.
-                if (prop.AutoFlag == CameraControlFlags.None)
+                if (this.controlPanel == null)
                 {
-                    continue;
+                    this.controlPanel = new ControlPanelForm();
+                    this.controlPanel.SetCamera(this.camera);
+                    this.controlPanel.FormClosed += (sender2, e2) => {
+                        this.controlPanel = null;
+                    };
+                    this.controlPanel.Show();
                 }
+            }
 
-                ControlPanel cp = new ControlPanel();
+            //Panel controlPanelHolder = new Panel();
+            //controlPanelHolder.AutoSize = true;
+            //int yCoord = 0;
+
+            //List<CameraProperty> properties = this.camera.GetCameraInfo();
+            //foreach (CameraProperty prop in properties)
+            //{
+            //    // Skip properties that aren't user controllable.
+            //    if (prop.AutoFlag == CameraControlFlags.None)
+            //    {
+            //        continue;
+            //    }
+
+            //    ControlPanel cp = new ControlPanel();
                 
-                if ((prop.AutoFlag & CameraControlFlags.Auto) == CameraControlFlags.Auto)
-                {
-                    cp.Auto = true;
-                    cp.EnableAuto();
-                }
-                else if ((prop.AutoFlag & CameraControlFlags.Manual) == CameraControlFlags.Manual)
-                {
-                    cp.Auto = false;
-                }
+            //    if ((prop.AutoFlag & CameraControlFlags.Auto) == CameraControlFlags.Auto)
+            //    {
+            //        cp.Auto = true;
+            //        cp.EnableAuto();
+            //    }
+            //    else if ((prop.AutoFlag & CameraControlFlags.Manual) == CameraControlFlags.Manual)
+            //    {
+            //        cp.Auto = false;
+            //    }
 
-                cp.Step = prop.Step;
-                cp.Min = prop.Min;
-                cp.Max = prop.Max;
-                cp.PropertyType = prop.Name;
-                cp.CurrentValue = prop.CurrentValue;
-                cp.Location = new Point(0, yCoord);
-                yCoord += cp.Size.Height;
-                cp.ValueChangedEvent += this.ValueChanged;
-                cp.AutoChangedEvent += this.AutoChanged;
-                cp.PerformLayout();
-                controlPanelHolder.Controls.Add(cp);
-            }
-            controlPanelHolder.PerformLayout();
+            //    cp.Step = prop.Step;
+            //    cp.Min = prop.Min;
+            //    cp.Max = prop.Max;
+            //    cp.PropertyType = prop.Name;
+            //    cp.CurrentValue = prop.CurrentValue;
+            //    cp.Location = new Point(0, yCoord);
+            //    yCoord += cp.Size.Height;
+            //    cp.ValueChangedEvent += this.ValueChanged;
+            //    cp.AutoChangedEvent += this.AutoChanged;
+            //    cp.PerformLayout();
+            //    controlPanelHolder.Controls.Add(cp);
+            //}
+            //controlPanelHolder.PerformLayout();
 
-            Form f = new Form();
-            f.AutoSize = true;
-            f.Controls.Add(controlPanelHolder);
-            f.FormBorderStyle = FormBorderStyle.FixedToolWindow;
-            f.TopMost = true;
-            f.ResumeLayout(false);
-            f.PerformLayout();
+            //Form f = new Form();
+            //f.AutoSize = true;
+            //f.Controls.Add(controlPanelHolder);
+            //f.FormBorderStyle = FormBorderStyle.FixedToolWindow;
+            //f.TopMost = true;
+            //f.ResumeLayout(false);
+            //f.PerformLayout();
 
-            f.Show();
+            //f.Show();
         }
 
-        public void ValueChanged(object o, ValueEventArgs e)
-        {
-            this.camera.SetProperty(e.PropertyName, CameraControlFlags.None, e.Value);
-        }
+        //public void ValueChanged(object o, ValueEventArgs e)
+        //{
+        //    this.camera.SetProperty(e.PropertyName, CameraControlFlags.None, e.Value);
+        //}
 
-        public void AutoChanged(object o, AutoEventArgs e)
-        {
-            if (e.Value)
-            {
-                this.camera.SetProperty(e.PropertyName, CameraControlFlags.Auto);
-            }
-            else
-            {
-                this.camera.SetProperty(e.PropertyName, CameraControlFlags.Manual);
-                ControlPanel cp = (ControlPanel)o;
-                cp.CurrentValue = this.camera.GetProperty(e.PropertyName);
-            }
-        }
+        //public void AutoChanged(object o, AutoEventArgs e)
+        //{
+        //    if (e.Value)
+        //    {
+        //        this.camera.SetProperty(e.PropertyName, CameraControlFlags.Auto);
+        //    }
+        //    else
+        //    {
+        //        this.camera.SetProperty(e.PropertyName, CameraControlFlags.Manual);
+        //        ControlPanel cp = (ControlPanel)o;
+        //        cp.CurrentValue = this.camera.GetProperty(e.PropertyName);
+        //    }
+        //}
     }
 }

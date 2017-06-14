@@ -3,13 +3,14 @@ using System.Text;
 
 namespace WebcamViewer
 {
-    class CameraProperty
+    public class CameraProperty
     {
         public CameraControlProperty Name { get; set; }
         public int Min { get; set; }
         public int Max { get; set; }
         public int Step { get; set; }
         public CameraControlFlags AutoFlag { get; set; }
+        public CameraControlFlags PossibleAutoFlag { get; set; }
         public int CurrentValue { get; set; }
         public int DefaultValue { get; set; }
 
@@ -17,6 +18,8 @@ namespace WebcamViewer
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendFormat("Property name: {0}", this.Name.ToString());
+            sb.AppendLine();
+            sb.AppendFormat("Available auto settings: {0}", this.PossibleAutoFlag);
             sb.AppendLine();
             sb.AppendFormat("Is automatically set: {0}", this.AutoFlag);
             sb.AppendLine();

@@ -147,13 +147,11 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.Text = "TestForm";
             this.Load += new System.EventHandler(this.TestForm_Load);
-            this.ResizeBegin += new System.EventHandler(this.TestForm_ResizeBegin);
             this.Resize += new System.EventHandler(this.TestForm_Resize);
             this.panelSettings.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion

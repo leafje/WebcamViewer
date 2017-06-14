@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 namespace WebcamViewer
 {
     // a small enum to record the graph state
-    enum CameraStreamState
+    public enum CameraStreamState
     {
         Stopped,
         Paused,
@@ -15,7 +15,7 @@ namespace WebcamViewer
         NotInitialized
     };
 
-    class Camera
+    public class Camera
     {
         private IBaseFilter sourceFilter = null;
         private DsDevice dev = null;
@@ -165,10 +165,11 @@ namespace WebcamViewer
                 info.Max = max;
                 info.Step = step;
                 info.DefaultValue = def;
-                info.AutoFlag = flags;
+                info.PossibleAutoFlag = flags;
 
                 cc.Get(prop, out val, out flags);
                 info.CurrentValue = val;
+                info.AutoFlag = flags;
                 settings.Add(info);
             }
 
