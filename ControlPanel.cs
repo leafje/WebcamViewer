@@ -20,14 +20,6 @@ namespace WebcamViewer
             InitializeComponent();
         }
 
-        public string PropertyName
-        {
-            set {
-                this.pName = value;
-                this.labelName.Text = value;
-            }
-        }
-
         public CameraControlProperty PropertyType
         {
             set
@@ -65,6 +57,10 @@ namespace WebcamViewer
         {
             get { return this.trackBarValue.Value; }
             set { this.trackBarValue.Value = value; }
+        }
+        public void EnableAuto()
+        {
+            this.checkBoxAuto.Enabled = true;
         }
 
         private void trackBarValue_ValueChanged(object sender, EventArgs e)

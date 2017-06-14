@@ -16,5 +16,4 @@ Feedback, issues, and pull requests are welcomed.
 MIT
 
 **TODO**
-- The code does not handle desktop scaling well. For example, I have tested this software on a high DPI laptop display with a scaling factor of 250% - the screen is 3200x1800 pixels, so it has an effective resolution of 1280x720. The webcam display is also scaled by 250%, leading to a very pixellated display when selecting higher resolutions.
 - Before adding too many more features, migrate the UI to WPF. I think in the long run WPF will be a more robust platform for building the UI, but Windows Forms works well enough for a quick prototype.

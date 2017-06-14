@@ -48,7 +48,7 @@
             this.comboBoxCamera.Name = "comboBoxCamera";
             this.comboBoxCamera.Size = new System.Drawing.Size(321, 39);
             this.comboBoxCamera.TabIndex = 0;
-            this.comboBoxCamera.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            this.comboBoxCamera.SelectedIndexChanged += new System.EventHandler(this.comboBoxCamera_SelectedIndexChanged);
             // 
             // comboBoxResolution
             // 
@@ -57,7 +57,7 @@
             this.comboBoxResolution.Name = "comboBoxResolution";
             this.comboBoxResolution.Size = new System.Drawing.Size(425, 39);
             this.comboBoxResolution.TabIndex = 1;
-            this.comboBoxResolution.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
+            this.comboBoxResolution.SelectedIndexChanged += new System.EventHandler(this.comboBoxResolution_SelectedIndexChanged);
             // 
             // panelVideo
             // 

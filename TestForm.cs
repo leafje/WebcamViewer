@@ -38,7 +38,7 @@ namespace WebcamViewer
             this.comboBoxCamera.Items.AddRange(names.ToArray());
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void comboBoxCamera_SelectedIndexChanged(object sender, EventArgs e)
         {
             int index = this.comboBoxCamera.SelectedIndex;
             string deviceName = (string)this.comboBoxCamera.Items[index];
@@ -49,18 +49,15 @@ namespace WebcamViewer
             List<VideoStreamInfo> resolutions = this.camera.GetResolutions();
             this.comboBoxResolution.Items.Clear();
             this.comboBoxResolution.Items.AddRange(resolutions.ToArray());
-            this.comboBoxResolution.SelectedIndex = 2;
-            //this.panel1.ClientSize = new Size(resolutions[2].Width, resolutions[2].Height);
-            //this.camera.ResizeVideoWindow(this.panel1.ClientSize);
+            this.comboBoxResolution.SelectedIndex = 0;
         }
 
-        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        private void comboBoxResolution_SelectedIndexChanged(object sender, EventArgs e)
         {
             VideoStreamInfo selectedResolution = (VideoStreamInfo)this.comboBoxResolution.SelectedItem;
             this.camera.SetResolution(selectedResolution);
-            //this.panel1.ClientSize = new Size(selectedResolution.Width, selectedResolution.Height);
-            this.ClientSize = new Size(System.Math.Max(1225, selectedResolution.Width) + this.panelVideo.Margin.Horizontal,
-                selectedResolution.Height + this.panelSettings.Height + this.panelVideo.Margin.Vertical);
+            this.ClientSize = new Size(System.Math.Max(1225, selectedResolution.Width) + this.panelVideo.Margin.Horizontal + SystemInformation.VerticalScrollBarWidth,
+                selectedResolution.Height + this.panelSettings.Height + this.panelVideo.Margin.Vertical + SystemInformation.HorizontalScrollBarHeight);
             this.panelVideo.Width = selectedResolution.Width;
             this.panelVideo.Height = selectedResolution.Height;
 
@@ -103,8 +100,8 @@ namespace WebcamViewer
 
         private void buttonControlPanel_Click(object sender, EventArgs e)
         {
-            Panel controlPanel = new Panel();
-            controlPanel.AutoSize = true;
+            Panel controlPanelHolder = new Panel();
+            controlPanelHolder.AutoSize = true;
             int yCoord = 0;
 
             List<CameraProperty> properties = this.camera.GetCameraInfo();
@@ -117,13 +114,13 @@ namespace WebcamViewer
                 }
 
                 ControlPanel cp = new ControlPanel();
-                cp.PropertyName = prop.Name.ToString();
                 
-                if (prop.AutoFlag == CameraControlFlags.Auto)
+                if ((prop.AutoFlag & CameraControlFlags.Auto) == CameraControlFlags.Auto)
                 {
                     cp.Auto = true;
+                    cp.EnableAuto();
                 }
-                else if (prop.AutoFlag == CameraControlFlags.Manual)
+                else if ((prop.AutoFlag & CameraControlFlags.Manual) == CameraControlFlags.Manual)
                 {
                     cp.Auto = false;
                 }
@@ -131,19 +128,20 @@ namespace WebcamViewer
                 cp.Step = prop.Step;
                 cp.Min = prop.Min;
                 cp.Max = prop.Max;
-                cp.CurrentValue = prop.CurrentValue;
                 cp.PropertyType = prop.Name;
+                cp.CurrentValue = prop.CurrentValue;
                 cp.Location = new Point(0, yCoord);
                 yCoord += cp.Size.Height;
                 cp.ValueChangedEvent += this.ValueChanged;
                 cp.AutoChangedEvent += this.AutoChanged;
-                controlPanel.Controls.Add(cp);
+                cp.PerformLayout();
+                controlPanelHolder.Controls.Add(cp);
             }
-            controlPanel.PerformLayout();
+            controlPanelHolder.PerformLayout();
 
             Form f = new Form();
             f.AutoSize = true;
-            f.Controls.Add(controlPanel);
+            f.Controls.Add(controlPanelHolder);
             f.FormBorderStyle = FormBorderStyle.FixedToolWindow;
             f.TopMost = true;
             f.ResumeLayout(false);
